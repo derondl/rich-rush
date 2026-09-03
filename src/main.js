@@ -500,6 +500,12 @@
 
   /* ================= 事件委托 ================= */
   document.addEventListener('click', function (e) {
+    const mtab = e.target.closest('.mtab');
+    if (mtab) {
+      document.querySelectorAll('#mtabs .mtab').forEach((b) => b.classList.toggle('active', b === mtab));
+      document.body.classList.toggle('show-right', mtab.dataset.mtab === 'right');
+      return;
+    }
     const t = e.target.closest('[data-act]');
     if (!t) return;
     const act = t.dataset.act;
@@ -526,15 +532,20 @@
         RR.sel.reroll--; rollPicks(); break;
       case 'start':
         if (RR.sel.traits.length !== 3) return;
+        document.body.classList.remove('show-right');
         startGame(); break;
       case 'continue': {
         const sv = RR.loadGame();
-        if (sv) { RR.S = sv; RR.view = 'mall'; show('screen-game'); renderAll(); RR.toast('继续第 ' + sv.day + ' 天', 'good'); }
+        if (sv) { RR.S = sv; RR.view = 'mall'; document.body.classList.remove('show-right'); show('screen-game'); renderAll(); RR.toast('继续第 ' + sv.day + ' 天', 'good'); }
         break;
       }
 
       /* --- 主界面 --- */
-      case 'scene': RR.view = id; RR.renderLeft(S); RR.renderMain(S); break;
+      case 'scene':
+        RR.view = id;
+        document.body.classList.remove('show-right');
+        { const mm = document.querySelector('#mtabs .mtab[data-mtab="main"]'); document.querySelectorAll('#mtabs .mtab').forEach((b) => b.classList.toggle('active', b === mm)); }
+        RR.renderLeft(S); RR.renderMain(S); break;
       case 'bulk': RR.bulkIdx[t.dataset.scene] = +t.dataset.i; RR.renderMain(S); break;
       case 'buy': doBuy(t.dataset.scene, id); break;
       case 'invest': {
