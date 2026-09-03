@@ -49,7 +49,7 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
 .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
 
 /* ---------- 布局 ---------- */
-#app { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+#app { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
 .screen { display: none; flex: 1; min-height: 0; }
 .screen.active { display: flex; flex-direction: column; }
 
@@ -453,20 +453,61 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
 }
 
 /* ---------- 响应式 ---------- */
+/* 平板/小笔记本：右栏收窄但保持可见（不再隐藏，避免手机看不到卡牌） */
 @media (max-width: 1120px) {
-  #side-right { display: none; }
+  #side-right { flex-basis: 250px; }
 }
+/* 手机：三栏改为纵向滚动，右栏堆叠显示，顶栏压缩，触控区域加大 */
 @media (max-width: 820px) {
-  #game-body { flex-direction: column; }
+  #app { height: 100dvh; }
+  #topbar {
+    flex-wrap: wrap; gap: 7px 12px; padding: 8px 12px;
+    padding-top: calc(8px + env(safe-area-inset-top));
+  }
+  .tb-asset { order: -1; flex: 1 1 100%; }
+  .tb-asset .tb-value { font-size: 21px; }
+  .tb-who { min-width: 0; }
+  .tb-right { margin-left: 0; width: 100%; justify-content: flex-end; gap: 6px; }
+  .tb-right .btn { flex: 1 1 auto; min-height: 38px; }
+
+  #game-body {
+    flex-direction: column;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* 左栏：横向滚动的场景/功能导航，吸顶固定在滚动区顶部 */
   #side-left {
-    flex: 0 0 auto; border-right: none; border-bottom: 1px solid var(--line);
-    display: flex; flex-direction: row; overflow-x: auto; overflow-y: hidden; padding: 6px;
+    flex: 0 0 auto; order: 0;
+    border-right: none; border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 15;
+    display: flex; flex-direction: row; overflow-x: auto; overflow-y: hidden;
+    padding: 6px; background: var(--panel); box-shadow: 0 2px 8px rgba(0,0,0,.05);
   }
   #side-left .side-title { display: none; }
-  .scene-btn { width: auto; margin: 0 3px 0 0; white-space: nowrap; }
-  .func-btn { width: auto; margin: 0 3px 0 0; white-space: nowrap; }
-  #topbar { flex-wrap: wrap; gap: 10px 14px; }
-  .tb-asset { order: -1; flex: 1 1 100%; }
-  #main-scroll { padding: 12px 12px 40px; }
-  .goods-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+  .scene-btn { width: auto; margin: 0 3px 0 0; white-space: nowrap; min-height: 40px; }
+  .func-btn { width: auto; margin: 0 3px 0 0; white-space: nowrap; min-height: 40px; }
+
+  /* 中栏：取消内部独立滚动，交给整页滚动 */
+  #main-col { display: block; min-width: 0; }
+  #main-scroll { overflow: visible; flex: none; padding: 12px 12px 28px; }
+
+  /* 右栏：手机上完整显示并堆叠在中栏下方（不再隐藏） */
+  #side-right {
+    flex: 0 0 auto; width: 100%;
+    border-left: none; border-top: 1px solid var(--line);
+    max-height: none; overflow-y: visible;
+  }
+
+  .btn { min-height: 38px; }
+  .goods-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .shop-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .draw-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .task-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+}
+/* 超窄屏（<380px）再压缩字号 */
+@media (max-width: 380px) {
+  .tb-value { font-size: 15px; }
+  .tb-asset .tb-value { font-size: 19px; }
+  .sel-title { font-size: 27px; }
+  .goods-grid, .shop-grid, .draw-grid, .task-grid { grid-template-columns: 1fr; }
 }
