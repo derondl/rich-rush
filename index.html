@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="BXhFdlMLsrFumAN48Pp685">
+<head data-page-node-id="q4HG3GDYMHl9TsE0VcZmfo">
+<meta charset="UTF-8" data-page-node-id="N1IFv7E8KioItswIfQiEct" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" data-page-node-id="43CARkJqXCVq1m0GaC8TH7" />
+<title>花光首富的钱 · Roguelike 消费模拟</title>
+<link rel="stylesheet" href="styles/main.css" data-page-node-id="84zLRdzBcwrPlGmnfVzS9F" />
+</head>
+<body data-page-node-id="cHQ9q1L3Nx6Y687FI5FtCg">
+<div id="app" data-page-node-id="8lpnEVaHtmJBKod6TQmNEV">
+
+  <!-- ============ 1. 选择剧本 ============ -->
+  <section id="screen-select" class="screen" data-page-node-id="HMMFvSALBEGg1QQddusgH5">
+    <div class="sel-head" data-page-node-id="CBhnkFo7Z6SVnyWhNeLyIt">
+      <h1 class="sel-title" data-page-node-id="aC2Qc2Ke0GG3DD0dXTanKm">花光首富的钱</h1>
+      <div class="sel-sub" data-page-node-id="s6U7T9A2OgBmxiI0FN8AsI">表面是消费模拟器，实际上是个 Roguelike。选一位首富，在规定天数内把他（她）的钱全部花光。</div>
+      <div class="sel-tip" data-page-node-id="5Rj9YxdEg6wPCEBhCGAFOI">💰 财富数据来自 Forbes 实时榜（2026-08-29）与 Forbes 中国富豪榜（2026-01）</div>
+    </div>
+    <div id="tyc-grid" class="tyc-grid" data-page-node-id="G3yAdX6YyagUPaV3EF5Cj0"></div>
+    <div class="sel-bar" data-page-node-id="oPXHmjoJYhODDRsleH6J9M">
+      <div style="font-size:12px;color:var(--ink3)" data-page-node-id="ar6MgHM5EUaQAcK7X57NbA">难度（影响天数）</div>
+      <div id="diff-group" class="diff-group" data-page-node-id="dqYQzncdWeN21xkmynyPSy"></div>
+      <div id="sel-info" style="flex:1;min-width:160px;font-size:13px;color:var(--ink2)" data-page-node-id="MDsSB2IF34C0XB81c9s36y"></div>
+      <button id="btn-to-draw" class="btn primary" disabled data-page-node-id="SrUQM5UuF2N4ADD4hDElti">选择剧本 →</button>
+      <button id="btn-continue" class="btn" style="display:none" data-page-node-id="fpypjkTl0FzKGXGebFGETz">继续上次存档</button>
+    </div>
+  </section>
+
+  <!-- ============ 2. 开局抽卡 ============ -->
+  <section id="screen-draw" class="screen" data-page-node-id="UViwOMm9sd7A6u5rfq6P6H">
+    <div class="draw-wrap" data-page-node-id="uzq5ad2jtwX3qLjiLxjDEx">
+      <div class="draw-head" data-page-node-id="7XJKNB1gcOEYGizfdwzRxD">
+        <div class="draw-title" data-page-node-id="OSsjTygTpxAfqOfrhXEjTR">开局词条 · 十选三</div>
+        <div class="draw-sub" id="draw-sub" data-page-node-id="mWtLJpNvlCvPCGxK2F4VlV"></div>
+      </div>
+      <div id="draw-grid" class="draw-grid" data-page-node-id="1RXEnLFyAowqWUBRmp1WiO"></div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap" data-page-node-id="1wOox0ZATiMSvMYgofOQ9B">
+        <button id="btn-reroll" class="btn" data-page-node-id="JTngxri5lBF7RM0wanD1uv">🎲 重抽（每天 1 次免费机会已在本次用掉）</button>
+        <button id="btn-start" class="btn primary" disabled data-page-node-id="1DS6D5rrsVHWcDpuND74VH">开始败家 →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. 主游戏 ============ -->
+  <section id="screen-game" class="screen" data-page-node-id="WlQ4cuxEBzPk1Rgk1og8VY">
+    <header id="topbar" data-page-node-id="ByM6cbgqe0y0CfMcdDXCbY"></header>
+    <div id="game-body" data-page-node-id="3wtxrTjEWyGJGDkpIvliEq">
+      <aside id="side-left" data-page-node-id="MHYh4ieRe4MTgxGSCxs7Dl"></aside>
+      <div id="main-col" data-page-node-id="P1OahgBskBTPwCYYDTK8wS">
+        <div id="main-scroll" data-page-node-id="38xlmZSJ4nGsBOe4qm5kBJ"></div>
+      </div>
+      <aside id="side-right" data-page-node-id="Axi8LSE3lv5hVP6CGPQ1Fx"></aside>
+    </div>
+  </section>
+
+</div>
+
+<div id="modal-root" data-page-node-id="9dfNjNy2wSLI470cAUfNWQ"></div>
+<div id="toast-root" data-page-node-id="8EOTiATMk3tPFyD146P0Yr"></div>
+
+<script src="src/util.js"></script>
+<script src="src/data/tycoons.js"></script>
+<script src="src/data/traits.js"></script>
+<script src="src/data/items.js"></script>
+<script src="src/data/cards.js"></script>
+<script src="src/data/events.js"></script>
+<script src="src/data/missions.js"></script>
+<script src="src/systems/cardfx.js"></script>
+<script src="src/state.js"></script>
+<script src="src/systems/economy.js"></script>
+<script src="src/systems/mission.js"></script>
+<script src="src/ui.js"></script>
+<script src="src/main.js"></script>
+</body>
+</html>
